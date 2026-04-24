@@ -1,13 +1,8 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
-export const images = sqliteTable('images', {
+export const photos = sqliteTable('photos', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  display_name: text('display_name').notNull(),
+  title: text('title').notNull(),
   cloudinary_id: text('cloudinary_id').notNull(),
-  created_at: text('created_at').default(sqliteNow()),
+  created_at: text('created_at').default(() => new Date().toISOString()),
 });
-
-function sqliteNow() {
-  // SQLite does not have a native timestamp type, so we use ISO string
-  return new Date().toISOString();
-}
