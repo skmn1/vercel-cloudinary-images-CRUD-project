@@ -1,3 +1,4 @@
+/// <reference types="node" />
 "use server";
 
 import { drizzle } from 'drizzle-orm/libsql';
