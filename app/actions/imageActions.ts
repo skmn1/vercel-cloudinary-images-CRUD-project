@@ -2,8 +2,8 @@
 
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
-import { images } from '../../db/schema';
-import { eq } from 'drizzle-orm';
+import { photos } from '../../db/schema';
+import { eq, desc } from 'drizzle-orm';
 
 const client = createClient({
   url: process.env.TURSO_CONNECTION_URL!,
@@ -13,18 +13,18 @@ const client = createClient({
 const db = drizzle(client);
 
 export async function getImages() {
-  return await db.select().from(images).orderBy(images.created_at.desc());
+  return await db.select().from(photos).orderBy(desc(photos.created_at));
 }
 
-export async function addImage({ display_name, cloudinary_id }: { display_name: string; cloudinary_id: string }) {
+export async function addImage({ title, cloudinary_id }: { title: string; cloudinary_id: string }) {
   const created_at = new Date().toISOString();
-  await db.insert(images).values({ display_name, cloudinary_id, created_at });
+  await db.insert(photos).values({ title, cloudinary_id, created_at });
 }
 
-export async function updateImageName(id: number, display_name: string) {
-  await db.update(images).set({ display_name }).where(eq(images.id, id));
+export async function updateImageTitle(id: number, title: string) {
+  await db.update(photos).set({ title }).where(eq(photos.id, id));
 }
 
 export async function deleteImage(id: number) {
-  await db.delete(images).where(eq(images.id, id));
+  await db.delete(photos).where(eq(photos.id, id));
 }
